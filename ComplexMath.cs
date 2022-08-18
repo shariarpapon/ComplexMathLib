@@ -49,7 +49,7 @@ namespace ComplexMathematics
             lower = GreaterThan0(lower);
             List<ComplexValue> values = new List<ComplexValue>();
             ComplexValue sum = ComplexValue.Origin;
-            for(int n = lower; n < upper; n++) {
+            for(int n = lower; n <= upper; n++) {
                 sum = sum + (1 / Power(n, s));
                 values.Add(sum * scaler);
             }   
@@ -86,21 +86,15 @@ namespace ComplexMathematics
 
         public static implicit operator string(ComplexValue val) => val.ToString();
 
-        public static bool operator ==(ComplexValue a , ComplexValue b) => 
-        (a.real == b.real && a.imaginary == b.imaginary);
+        public static bool operator ==(ComplexValue a , ComplexValue b) => (a.real == b.real && a.imaginary == b.imaginary);
         
-        public static bool operator !=(ComplexValue a, ComplexValue b) =>
-        (a.real != b.real || a.imaginary != b.imaginary);
+        public static bool operator !=(ComplexValue a, ComplexValue b) => (a.real != b.real || a.imaginary != b.imaginary);
 
-        public static ComplexValue operator +(ComplexValue a, ComplexValue b) => 
-        new ComplexValue(a.real + b.real, a.imaginary + b.imaginary);
+        public static ComplexValue operator +(ComplexValue a, ComplexValue b) => new ComplexValue(a.real + b.real, a.imaginary + b.imaginary);
 
-        public static ComplexValue operator -(ComplexValue a, ComplexValue b) =>
-        new ComplexValue(a.real - b.real, a.imaginary - b.imaginary);
+        public static ComplexValue operator -(ComplexValue a, ComplexValue b) => new ComplexValue(a.real - b.real, a.imaginary - b.imaginary);
 
         public static ComplexValue operator *(ComplexValue a, ComplexValue b) {
-            //(a.real + ia.complex) (b.real + ib.complex)
-            // (a.real)(b.real) + (a.real)(ib.complex) + (ia.complex)(b.real) + -(a.complex * b.complex)
             float r1 = a.real * b.real;
             float r2 = -(a.imaginary * b.imaginary);
             float i1 = a.real * a.imaginary;
@@ -111,6 +105,8 @@ namespace ComplexMathematics
         public static ComplexValue operator *(ComplexValue a, float b) => new ComplexValue(a.real * b, a.imaginary * b);
         public static ComplexValue operator /(ComplexValue a, float b) => new ComplexValue(a.real / b, a.imaginary / b);
         public static ComplexValue operator /(float a, ComplexValue b) => (b.Conjugate * a) / (b.Conjugate * b).real;
+        
+        //NOTE: [^] is not a logical operator in this context, its raising a complex number to a integer power.
         public static ComplexValue operator ^(ComplexValue a, int b) {
             ComplexValue val = a;
             if(b == 0) return RealUnitVector;
@@ -119,12 +115,12 @@ namespace ComplexMathematics
             if(b < 0) val = 1 / val;
             return val;
         }
-        //Functions
+
         public ComplexValue Conjugate {
             get { return new ComplexValue(real, -(imaginary)); }
         }
 
-        //Internally Defined Values
+        //Pre-Defined Values
         public static ComplexValue NaN{ 
             get { return new ComplexValue(float.NaN, float.NaN); }
         }
@@ -145,7 +141,6 @@ namespace ComplexMathematics
             get { return new ComplexValue(0, 0); }
         }
 
-        //Conversion
         public static ComplexValue ParseFromString(string str, char separator = '+')
         {
             str.Replace(" ", string.Empty);
